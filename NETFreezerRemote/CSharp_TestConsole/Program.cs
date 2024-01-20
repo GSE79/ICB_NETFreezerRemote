@@ -68,9 +68,82 @@ while (true)
             else
                 thisRemoteFreezer.EnableFTP(); // enable ftp server
         }
-        else if (LineIn.ToLower().StartsWith('h'))
-            Console.WriteLine("Start - to Start a Manual Fill/Cool cycle\nStop - to Stop a Manual Fill/Cool cycle\nReset - to Reset Alarms and Warnings\nFTP - to Enable/Disable FTP Server\nDemo - to Start/Stop Demo Mode");
+        else if (LineIn.ToLower().StartsWith("set")) // "set" - view settings 
+        {
+            string value;
+            float fvalue;
+            if (LineIn.ToLower().StartsWith("set ln2high ")) // "set" - ln2 high alarm level 
+            {
+                value = LineIn.ToLower().Replace("set ln2high ", "");
+                if (float.TryParse(value, out fvalue)) 
+                {
+                    thisRemoteFreezer.setLN2MaxSpt(fvalue);
+                }
+            }
+            else if (LineIn.ToLower().StartsWith("set ln2stop ")) // "set" - ln2 stop level 
+            {
+                value = LineIn.ToLower().Replace("set ln2stop ", "");
+                if (float.TryParse(value, out fvalue))
+                {
+                    thisRemoteFreezer.setLN2HighSpt(fvalue);
+                }
+            }
+            else if (LineIn.ToLower().StartsWith("set ln2start ")) // "set" - ln2 start level 
+            {
+                value = LineIn.ToLower().Replace("set ln2start ", "");
+                if (float.TryParse(value, out fvalue))
+                {
+                    thisRemoteFreezer.setLN2LowSpt(fvalue);
+                }
+            }
+            else if (LineIn.ToLower().StartsWith("set ln2low ")) // "set" - ln2 low alarm level 
+            {
+                value = LineIn.ToLower().Replace("set ln2low ", "");
+                if (float.TryParse(value, out fvalue))
+                {
+                    thisRemoteFreezer.setLN2MinSpt(fvalue);
+                }
+            }
+            else if (LineIn.ToLower().StartsWith("set temphigh ")) // "set" - tempA high alarm level 
+            {
+                value = LineIn.ToLower().Replace("set temphigh ", "");
+                if (float.TryParse(value, out fvalue))
+                {
+                    thisRemoteFreezer.setHighTempSpt((Int16)(fvalue*10.0f));
+                }
+            }
+            else if (LineIn.ToLower().StartsWith("set templow ")) // "set" - tempA low alarm level 
+            {
+                value = LineIn.ToLower().Replace("set templow ", "");
+                if (float.TryParse(value, out fvalue))
+                {
+                    thisRemoteFreezer.setLowTempSpt((Int16)(fvalue * 10.0f));
+                }
+            }
 
+            Console.WriteLine("LN2 High Spt= " + thisRemoteFreezer.getLN2MaxSpt().ToString());
+            Console.WriteLine("LN2 Stop Spt= " + thisRemoteFreezer.getLN2HighSpt().ToString());
+            Console.WriteLine("LN2 Start Spt= " + thisRemoteFreezer.getLN2LowSpt().ToString());
+            Console.WriteLine("LN2 Low Spt= " + thisRemoteFreezer.getLN2MinSpt().ToString());
+            Console.WriteLine("Temp High Spt= " + (thisRemoteFreezer.getTempHighSpt()/10.0f).ToString());
+            Console.WriteLine("Temp Low Spt= " + (thisRemoteFreezer.getTempLowSpt()/10.0f).ToString());
+
+        }
+        else if (LineIn.ToLower().StartsWith('h'))
+        {
+            Console.WriteLine("Start - to Start a Manual Fill/Cool cycle");
+            Console.WriteLine("Stop - to Stop a Manual Fill/Cool cycle");
+            Console.WriteLine("Reset - to Reset Alarms and Warnings");
+            Console.WriteLine("FTP - to Enable/Disable FTP Server");
+            Console.WriteLine("Demo - to Start/Stop Demo Mode");
+            Console.WriteLine("Set - to View Settings");
+            Console.WriteLine("Set LN2High value - to set LN2 Alarm Level (high)");
+            Console.WriteLine("Set LN2Stop value - to set LN2 Stop Level");
+            Console.WriteLine("Set LN2Start value - to set LN2 Start Level");
+            Console.WriteLine("Set LN2Low value - to set LN2 Alarm Level (low)");
+            Console.WriteLine("Set TempHigh value - to set TempA Alarm Level (high)");
+            Console.WriteLine("Set TempLow value - to set TempB Alarm Level (low)");
+        }
         // query freezer status over Modbus tcp
         thisRemoteFreezer.GetStatusVars();
 
